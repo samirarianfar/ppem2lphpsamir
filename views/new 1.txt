@@ -1,0 +1,45 @@
+<?php
+if($_SESSION['auth']['rang_salarie']== 2)
+{
+    require "Models/admin.php";
+    require "Models/formationUser.php";
+	
+	if (isset($_POST['formUser']))
+    {
+		$_SESSION['test'] = $_POST['idUser'];
+    }
+    //$listeFormation = getFormationsUser($_SESSION['test']);
+   $IdEmploye= $_SESSION['auth']['IdEmploye'];
+   $listeFormation = getFormationsEmploye($IdEmploye);
+    $_GET['p'] = 'chefEquipe';
+
+    if (isset($_POST['Valide']))
+		
+	{
+		$IdFormation = $_POST['idForm'];
+		$nbjourformation = getnbjourformation($IdFormation);
+        $creditsformation = getcreditsformation($IdFormation);
+        $nbjoursalarie = getnbjoursalarie($IdEmploye);
+        $creditssalarie = getcreditssalarie($IdEmploye);
+		ValiderF($IdFormation,$IdEmploye);
+		 if (($nbjoursalarie >= $nbjourformation) && ($creditssalarie >= $creditsformation))
+        {
+            //ValiderF($IdFormation,$IdEmploye);
+            usenbjourcredits($nbjourformation,$creditsformation,$_SESSION['test']);
+            //header("Location:".BASE_URL."/formationUser");
+			header("Location:".BASE_URL."/formationUser?id=".$IdEmploye."");
+        }	
+	}
+	if (isset($_POST['Refuse']))
+	{
+		$id_f = $_POST['idForm'];
+		refuse($id_f,$id_s);
+		header("Location:".BASE_URL."/formationUser?id=".$id_s."");
+	}
+
+    require "Views/formationUser.php";
+}
+else
+{
+     header("Location:".BASE_URL."/disconnect");
+}

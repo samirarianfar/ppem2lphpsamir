@@ -1,25 +1,57 @@
-<?php
+<?php 
+require "Models/Connexion.php";
+if(isset($_COOKIE['auth']) && !isset($_SESSION['auth']))
+{
 
-include ('../controllers/login.php');
+    $auth = $_COOKIE['auth'];
+    $auth = explode('_____',$auth);
+    $employe = get_user_cookie($auth[0]);
+
+    $key = sha1($employe['LoginEmploye'].$employe['MdpEmploye'].$_SERVER['REMOTE_ADDR']);
+    if($cle == $auth[1])
+    {
+        $_SESSION['auth'] = $employe; 
+        setcookie('auth',$employe['IdEmploye'].'_____'.sha1($employe['LoginEmploye'].$employe['MdpEmploye'].$_SERVER['REMOTE_ADDR']),time()+(3600*24*3),'/','localhost');
+        
+        if($employe['rang_salarie'] == 1)
+        header("Location:".BASE_URL."/admin");
+        elseif($employe['rang_salarie'] == 2)
+        header("Location:".BASE_URL."/chefEquipe");
+        else
+        header("Location:".BASE_URL);
+    }
+    else
+    {
+        setcookie('auth','',time()-3600);
+    }
+}
+
+if(isset($_POST['submit']))
+{
+    $employe = get_Utilisateur($_POST);
+            
+    if($employe)
+    {
+        $_SESSION['auth'] = $employe; 
+        if(isset($_POST['remember']))
+        {
+            setcookie('auth',$employe['IdEmploye'].'_____'.sha1($employe['LoginEmploye'].$employe['MdpEmploye'].$_SERVER['REMOTE_ADDR']),time()+(3600*24*3),'/','localhost');
+        }
+        if($employe['rang_salarie'] == 1)
+			header("Location:".BASE_URL."/admin");
+    	elseif($employe['rang_salarie'] == 2)
+			header("Location:".BASE_URL."/chefEquipe");
+    	else
+			header("Location:".BASE_URL);
+
+    	
+                   
+     }
+     else
+     {
+         echo'<div class="alert alert-warning">Login ou mot de passe est incorrect !</div>';
+     }
+}
+
+require "Views/Connexion.php"
 ?>
-	<html>
-	<head>
-	<link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
-	<link rel="stylesheet" type="text/css" href="../CSS/Connexion.css">
-	<title> Gestion de formation </title>
-	</head>
-	<body>
-	<fieldset>
-	<legend> Connexion au site M2L </legend>
-	<p>
-	<form method="post" action="Connexion.php">
-	<label for="pseudo"> Pseudo : </label><input name="LoginEmploye" type="text" <?php if (isset($_POST['pseudo'])){echo'value= "'.$_POST['pseudo'].'"';}?> id="pseudo" /><p>
-	<label for="password"> Mot de Passe : </label><input type="password" <?php if (isset($_POST['password'])){echo'value= "'.$_POST['password'].'"';}?> name="MdpEmploye" id="password" /></p>
-	<a id = "inscrip" href ="admin.php"> Connexion Admin </a><br/>
-	<div><p><input type="submit" name="connexion" value="Connexion" /></p></div>
-	</form>
-	</fieldset>
-	</body>
-	</html>
-	
-<p style="color:red;text-align:center"><?php echo $erreur;?></p>

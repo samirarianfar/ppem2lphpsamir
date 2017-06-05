@@ -1,0 +1,49 @@
+<?php
+if($_SESSION['auth']['rang_salarie']== 2)
+{
+    require "Models/admin.php";
+    require "Models/formationUser.php";
+	
+    $IdEmploye = $_GET['id'];
+    $listeFormation = getFormationsEmploye($IdEmploye);
+    $_GET['p'] = 'chefEquipe';
+
+    if (isset($_POST['Valide']))
+	{
+		$IdFormation = $_POST['idForm'];
+		
+		
+		$nbjourformation = getnbjourformation($IdFormation);
+        $creditsformation = getcreditsformation($IdFormation);
+        $nbjoursalarie = getnbjoursalarie($IdEmploye);
+        $creditssalarie = getcreditssalarie($IdEmploye);
+		//header("Location:".BASE_URL."/formationUser?id=".$IdEmploye."");
+		 if (($nbjoursalarie >= $nbjourformation) && ($creditssalarie >= $creditsformation))
+        {
+            ValiderF($IdFormation,$IdEmploye);
+            usenbjourcredits($nbjourformation,$creditsformation,$_SESSION['IdEmploye']);
+            //header("Location:".BASE_URL."/formationUser");
+			header("Location:".BASE_URL."/formationUser?id=".$IdEmploye."");
+        }
+	}
+	else
+        {
+            /*echo "
+                L'utilisateur ne dispose pas d'assez de crédits ou de jours de formation pour s'inscrire a cette formation.
+                
+                ";
+        }
+	
+	if (isset($_POST['Refuse']))
+	{
+		$id_f = $_POST['idForm'];
+		refuse($id_f,$id_s);
+		header("Location:".BASE_URL."/formationUser?id=".$id_s."");
+	}
+
+    require "Views/formationUser.php";
+}
+else
+{
+     header("Location:".BASE_URL."/disconnect");
+}
