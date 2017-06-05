@@ -1,40 +1,88 @@
-<?php
-if($_SESSION['auth']['rang_salarie']== 2)
-{
-   
-	
-    include 'Core/tabsFormations.class.php';
-    require "Models/chefEquipe.php";
-    require "Models/dispoF.php";
+<body>
+	<div id="contenu1">
+	 <fieldset>
+        
+            
+          
+            <div>
+              
+				<?= Formations::FormDispo($Form, "3-2", "propose") ?>
+                <?= Formations::FormAttente($FormAtt, "2-2", "attente") ?>
+				<?= Formations::FormHistorique($FormHisto, "1-1", "histo") ?>
+            </div>
+      
+                <!--<h4>Liste des utilisateurs en attente</h4>
+                    <table>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Prenom</th>
+                            <th>Email</th>
+                            <th>Formations</th>
+                            <th>Supprimer</th>
+                        </tr>
+                        <?php
+                        if ($nbUtilisateur  > 0){
+                            foreach ($Utilisateur as $cle => $resultat){
+                               echo
+                                    '
+                            <tr>
+								<td>' . $resultat['NomEmploye'] . '</td>
+								<td>' . $resultat['PrenomEmploye'] . '</td>
+								<td>' . $resultat['Email'].'</td>
+                           
+						   <td>
+                            <form method="post" action="' . BASE_URL . '/formationUser">
+								<input type="submit" value="En attente" name="formUser" > 
+                                <input name="idUser" type="hidden" value="' . $resultat['IdEmploye'] . '" >
+                            </form>
+                            </td>
+                            <td>
+                            <form method="post" action="' . BASE_URL . '/chefEquipe">
+                                   
+                                <input type="submit" value="Supprimer" name="Supprimer" > 
+                                      
+                              <input name="idUser" type="hidden" value="' . $resultat['IdEmploye'] . '" >
+                            </form>
+                            </td>
+                            </tr>
+                            </tbody>';
+                            }
+                        }
+                        ?>-->
 
-    $IdEmploye= $_SESSION['auth']['IdEmploye'];
-	$nbUtilisateur = NombreUtilisateur($IdEmploye);
-	$Utilisateur = Utilisateur($IdEmploye);
-    $Form = getForm($IdEmploye);
-    $FormAtt = getFormAtt($IdEmploye);
-    $FormHisto = getHisto($IdEmploye);
-    $nombreDemande = NombrebDemande($IdEmploye);
-    $Demande = Demande($IdEmploye);
-
-        if(isset($_POST['Suivre']))
-        {
-            $IdFormation = $_POST['idForm'];
-            suivreForm($IdEmploye,$IdFormation);
-            header("Location:".BASE_URL."/chefEquipe");   
-        }
-    
-        if(isset($_POST['Supprimer']))
-        {
-            $IdEmploye = $_POST['idUser'];
-            deleteSalarie($IdEmploye);
-            header("Location:".BASE_URL."/chefEquipe");
-        }
-
-
-    require "Views/chefEquipe.php";
-}
-else
-{
-     header("Location:".BASE_URL."/disconnect");
-}
-?>
+                    </table>
+            <!--   <h4>Liste des demandes </h4>
+           
+            
+                    <table>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Prenom</th>
+                            <th>Formation</th>
+                            <th>Date</th>
+                            <th>Durée</th>
+                            <th>Jour restant</th>
+                           
+                        </tr>
+                        <?php
+                        if ($nombreDemande > 0) {
+                            foreach ($Demande as $cle => $resultat) {
+                                echo
+                                    '
+                            <tr>
+                            <td>' . $resultat['NomEmploye'] . '</td>
+                            <td>' . $resultat['PrenomEmploye'] . '</td>
+                            <td>' . $resultat['Libelle'] . '</td>
+                            <td>' . $resultat['Date_debut'] . '</td>
+                            <td>' . $resultat['durée'] . '</td>
+                            <td>' . $resultat['NbJours'] . '</td>
+                            
+                            </tr>
+                            ';
+                            }
+                        }
+                        ?>
+                    </table> -->       
+	</div>
+	</fieldset>
+</body>

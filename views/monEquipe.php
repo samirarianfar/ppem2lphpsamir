@@ -1,24 +1,48 @@
-<?php
-if($_SESSION['auth']['rang_salarie']== 2)
-{
-    
-    require "Models/monEquipe.php";
-    
+<body>
+	<div id="contenu1">
+<fieldset>
 
-    $IdEmploye= $_SESSION['auth']['IdEmploye'];
-	$nombreEmploye = MembreEmploye($IdEmploye);
-	$employe = Employe($IdEmploye);
-   
-        //if(isset($_POST['Choisir']))
-        //{//
-           // $IdFormation = $_POST['idForm'];
-            //inscrireFormation($IdEmploye,$IdFormation);
-            //header("Location:".BASE_URL."/chefEquipe");   
-        //}//
 
-    require "Views/monEquipe.php";
-}
-else
-{
-     header("Location:".BASE_URL."/disconnect");
-}
+                <h4>Liste des utilisateurs en attente </h4>
+           
+                    <table>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Prenom</th>
+                            <th>Email</th>
+                            <th>Etat</th>
+                            <th>Supprimer</th>
+                        </tr>
+                        <?php
+                        if ($nombreEmploye > 0) {
+                            foreach ($employe as $cle => $resluat) {
+                             echo
+                                  
+                            '<tr>
+                            <td>' .$resluat['NomEmploye'] . '</td>
+                            <td>' . $resluat['PrenomEmploye'] . '</td>
+                            <td>' . $resluat['Email'] . '</td>
+                            <td>
+                            <form method="post" action="' . BASE_URL . '/formationUser">
+                                    <input type="submit" value="En attente" name="formUser" > 
+                                    <input name="idUser" type="hidden" value="'.$resluat['IdEmploye'].'" >
+                            </form>
+                            </td>
+                            <td>
+                            <form method="post" action="' . BASE_URL . '/chefEquipe">
+                                    <input type="submit" value="Supprimer" name="Supprimer" >  
+                                    <input name="idUser" type="hidden" value="' . $resluat['IdEmploye'].'" >
+                            </form>
+                            </td>
+                            </tr>';
+                            
+                            }
+                        }
+                        ?>
+
+                    </table>
+             
+            
+</div>
+	</fieldset>
+</body>

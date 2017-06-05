@@ -1,63 +1,60 @@
-<?php
-require "Models/Monprofil.php";
 
-$IdEmploye = $_SESSION['auth']['IdEmploye'];
-$chefequipe = getChefEquipe($IdEmploye);
-$IdEmploye = $_SESSION['auth']['IdEmploye'];
+                    <h2><? =$employe['NomEmploye'], $employe['PrenomEmploye'] ?></h2>
+                    <p><?= $employe['NomEmploye'] ?></p>
+                    
+                        <li>
+                            <b>Nombre de jours restants:<?= $employe['NbJours'] ?></p>
+                        </li>
+                        <li>
+                            <b>Crédits restants:</b><?= $employe['CreditFormation'] ?></p>
+                        </li>
+                       
+					   <!--<?php if($employe['rang_salarie']== 3)
+                        echo "
+                            <b>Chef d'équipe</b>$chefequipe</p>
+                        </li>"
+                        ?>!-->
+                    </ul>
+                <div>
+                    <h3>Modifier votre profil:</h3>
+                </div>
+                <form role="form" action="<?= BASE_URL; ?>/Monprofil" method="post">
+						<div>
+                            <label>Nom</label>
+                            <input type="text" name="NomEmploye" placeholder="NomEmploye" value="<?= $employe['NomEmploye'] ?>"/>
+                        </div>
+                        <div>
+                            <label>Prenom</label>
+                            <input type="text" name="PrenomEmploye" placeholder="PrenomEmploye" value="<?= $employe['PrenomEmploye'] ?>"/>
+                        </div>
+                        <div>
+                            <label>Login</label>
+                            <input type="login" name="LoginEmploye" placeholder="login" value="<?= $employe['LoginEmploye'] ?>"/>
+                        </div>
+                        <div>
+                            <label>Mot de passe</label>
+                            <input type="mdp"  name="MdpEmploye"  placeholder="mot de passe"/>
+                        </div>
+						<div>
+                        
+                            <label>Comfirmation Mot de Passe</label>
+                            <input  type="mdp" name="MdpCon" placeholder="confirmation de mot de passe"/>
+                        </div>
+                        <?php if($employe['rang_salarie']== 1)
+                        echo '<div>
+                                <label>Jours de formation</label>
+                                <input type="number"name="NbJours" value="'.$employe['NbJours'].'"/>
+                              </div>
+                              
+                                <label>Crédits de formation</label>
+                                <input type="number"name="CreditFormation" value="'.$employe['CreditFormation'].'"/>
+                              </div>';
+                        ?>
+                   
 
-$employe = getInfoUser($IdEmploye);
+				   <div>
+                        <input type="submit" value="Valider" name="submit" >
+                    </div>
+                </form>
 
-if(isset($_POST['submit']))
-{
-    $NomEmploye = $_POST['NomEmploye'];
-    $PrenomEmploye = $_POST['PrenomEmploye'];
-    $LoginEmploye = $_POST['LoginEmploye'];
-    $MdpEmploye = sha1($_POST['MdpEmploye']);
-    $MdpCon = sha1($_POST['MdpCon']);
-
-    if(isset($NomEmploye) AND !empty($NomEmploye) AND $NomEmploye != $employe['NomEmploye'])
-    {
-        updateProfilNom($IdEmploye,$NomEmploye);
-        header("Location:".BASE_URL."/Monprofil");
-    }
-    if(isset($PrenomEmploye) AND !empty($PrenomEmploye) AND $PrenomEmploye != $employe['PrenomEmploye'])
-    {
-        updateProfilPrenom($IdEmploye,$PrenomEmploye);
-        header("Location:".BASE_URL."/Monprofil");
-        echo "";
-    }
-    if(isset($LoginEmploye) AND !empty($LoginEmploye) AND $LoginEmploye != $employe['LoginEmploye'])
-    {
-        updateProfilMail($IdEmploye,$LoginEmploye);
-        header("Location:".BASE_URL."/Monprofil");
-    }
-    if(isset($MdpEmploye) AND !empty($MdpEmploye))
-    {
-        if($MdpEmploye == $MdpCon)
-        {
-            updateProfilPassword($IdEmploye,$MdpEmploye);
-            header("Location:".BASE_URL."/Monprofil");
-        }
-        else
-        {
-            echo "";
-        }
-    }
-    if($employe['rang_salarie']== 1)
-    {
-        $CreditFormation = $_POST['CreditFormation'];
-        $NbJours = $_POST['NbJours'];
-        if(isset($NbjoursFormation) AND !empty($NbjoursFormation))
-        {
-            updateProfilNbjour($IdEmploye,$NbjoursFormation);
-            header("Location:".BASE_URL."/Monprofil");
-        }
-        if(isset($CreditFormation) AND !empty($CreditFormation))
-        {
-            updateProfilCredits($IdEmploye,$CreditFormation);
-            header("Location:".BASE_URL."/Monprofil");
-        }
-    }
-}
-require "Views/Monprofil.php";
-?>
+           
